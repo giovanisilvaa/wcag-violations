@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Protótipo — Violações WCAG POUR (Didático)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Crimson+Text&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #ffffff;
+      --surface: #f6f5f2;
+      --border: rgba(0,0,0,0.12);
+      --border-md: rgba(0,0,0,0.22);
+      --text-primary: #1a1a1a;
+      --text-secondary: #666;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+    }
+
+    body {
+      font-family: 'Crimson Text', Georgia, serif;
+      background: var(--surface);
+      color: var(--text-primary);
+      min-height: 100vh;
+      padding: 2rem 1rem;
+    }
+
+    .page-wrapper {
+      max-width: 740px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    .site-header {
+      background: var(--bg);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .eyebrow {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+    }
+
+    .site-header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 26px;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 8px;
+    }
+
+    .site-header p {
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.65;
+    }
+
+    /* Cards */
+    .card {
+      background: var(--bg);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      margin-bottom: 10px;
+    }
+
+    .violation-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 38px;
+      font-weight: 700;
+      line-height: 1;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .card h2 {
+      font-size: 17px;
+      font-weight: 500;
+      margin-bottom: 5px;
+      font-family: 'Playfair Display', serif;
+    }
+
+    .card p.desc {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.65;
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-left: 6px;
+      vertical-align: middle;
+      letter-spacing: 0.05em;
+      font-family: sans-serif;
+    }
+    .badge-p { background: #F5C4B3; color: #712B13; }
+    .badge-o { background: #CECBF6; color: #3C3489; }
+    .badge-u { background: #C0DD97; color: #27500A; }
+
+    .demo-box {
+      background: var(--surface);
+      border-radius: var(--radius-md);
+      padding: 1rem 1.25rem;
+      margin-top: 10px;
+    }
+
+    .demo-label {
+      font-size: 11px;
+      color: var(--text-secondary);
+      font-style: italic;
+      margin-bottom: 10px;
+      font-family: sans-serif;
+    }
+
+    .meta-note {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-top: 10px;
+      font-style: italic;
+      font-family: sans-serif;
+    }
+
+    hr.divider {
+      border: none;
+      border-top: 0.5px solid var(--border);
+      margin: 1.5rem 0;
+    }
+
+    /* === VIOLATION 1: Low contrast === */
+    .bad-contrast {
+      color: #BBBBBB;
+      background: #FFFFFF;
+      font-size: 14px;
+      padding: 10px 14px;
+      border-radius: 6px;
+      border: 0.5px solid #eee;
+      line-height: 1.65;
+      font-family: sans-serif;
+    }
+
+    /* === VIOLATION 2: Tiny buttons, no focus === */
+    .bad-btn {
+      font-size: 9px;
+      padding: 2px 5px;
+      cursor: pointer;
+      border: 1px solid #ccc;
+      background: white;
+      color: #333;
+      border-radius: 3px;
+      outline: none !important;
+      display: inline-block;
+      margin: 2px;
+      font-family: sans-serif;
+    }
+    .bad-btn:focus { outline: none !important; box-shadow: none !important; }
+
+    /* === VIOLATION 3: Moving content === */
+    @keyframes spin-forever {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+    @keyframes blink-fast {
+      0%, 49% { opacity: 1; }
+      50%, 100% { opacity: 0; }
+    }
+    .spinning {
+      display: inline-block;
+      animation: spin-forever 8s linear infinite;
+      font-size: 14px;
+      font-family: sans-serif;
+    }
+    .blinking {
+      display: inline-block;
+      animation: blink-fast 0.4s step-end infinite;
+      color: #cc0000;
+      font-weight: 700;
+      font-size: 16px;
+      font-family: sans-serif;
+    }
+
+    /* === VIOLATION 4: No alt image === */
+    .fake-img {
+      width: 100%;
+      height: 90px;
+      background: linear-gradient(135deg, #f5a623, #f76b1c);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+    }
+    .code-snippet {
+      font-family: monospace;
+      font-size: 11px;
+      color: var(--text-secondary);
+      display: block;
+      margin-top: 8px;
+    }
+
+    /* === VIOLATION 5: No labels === */
+    .bad-input {
+      width: 100%;
+      padding: 8px 10px;
+      font-size: 13px;
+      border: 0.5px solid var(--border-md);
+      border-radius: 6px;
+      background: var(--bg);
+      color: var(--text-primary);
+      margin-bottom: 8px;
+      font-family: sans-serif;
+    }
+
+    /* === VIOLATION 6: Keyboard trap === */
+    .trap-area {
+      border: 0.5px dashed var(--border-md);
+      border-radius: 6px;
+      padding: 12px;
+      background: var(--bg);
+    }
+    .trap-area p {
+      font-size: 13px;
+      margin-bottom: 8px;
+      font-family: sans-serif;
+    }
+    .trap-textarea {
+      width: 100%;
+      font-size: 13px;
+      border: 0.5px solid var(--border-md);
+      border-radius: 6px;
+      padding: 8px;
+      background: var(--bg);
+      color: var(--text-primary);
+      resize: none;
+      font-family: sans-serif;
+    }
+
+    /* === Summary grid === */
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 10px;
+      margin-bottom: 1.5rem;
+    }
+    .metric {
+      background: var(--bg);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+    }
+    .metric-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      margin-bottom: 4px;
+      font-family: sans-serif;
+    }
+    .metric-value {
+      font-family: 'Playfair Display', serif;
+      font-size: 28px;
+      font-weight: 700;
+      line-height: 1;
+    }
+    .metric-sub {
+      font-size: 11px;
+      color: var(--text-secondary);
+      margin-top: 3px;
+      font-family: sans-serif;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-secondary);
+      font-style: italic;
+      padding: 1rem 0 0;
+      font-family: sans-serif;
+    }
+  </style>
+</head>
+<body>
+  <div class="page-wrapper">
+
+    <!-- Header -->
+    <header class="site-header">
+      <p class="eyebrow">Protótipo Didático — WCAG 2.2 POUR</p>
+      <h1>Site com violações intencionais de acessibilidade</h1>
+      <p>Cada seção abaixo demonstra uma violação real e documentada dos princípios POUR. As badges coloridas identificam qual princípio é violado em cada caso.</p>
+    </header>
+
+    <!-- Summary -->
+    <div class="summary-grid">
+      <div class="metric">
+        <p class="metric-label">Perceptível</p>
+        <p class="metric-value">2</p>
+        <p class="metric-sub">violações</p>
+      </div>
+      <div class="metric">
+        <p class="metric-label">Operável</p>
+        <p class="metric-value">3</p>
+        <p class="metric-sub">violações</p>
+      </div>
+      <div class="metric">
+        <p class="metric-label">Compreensível</p>
+        <p class="metric-value">1</p>
+        <p class="metric-sub">violação</p>
+      </div>
+      <div class="metric">
+        <p class="metric-label">Total</p>
+        <p class="metric-value">6</p>
+        <p class="metric-sub">critérios violados</p>
+      </div>
+    </div>
+
+    <!-- VIOLAÇÃO 1 -->
+    <div class="card">
+      <div class="card-header">
+        <span class="violation-number" style="color:#F09595;">1</span>
+        <div>
+          <h2>Texto com contraste insuficiente <span class="badge badge-p">P — Perceptível</span></h2>
+          <p class="desc">Viola o critério <strong>1.4.3 (Contraste mínimo — Nível AA)</strong>. A relação de contraste é de aproximadamente <strong>1.5:1</strong>, muito abaixo do mínimo de <strong>4.5:1</strong> exigido para texto normal.</p>
+        </div>
+      </div>
+      <div class="demo-box">
+        <p class="demo-label">⚠ Demonstração — texto intencionalmente ilegível</p>
+        <div class="bad-contrast">
+          Bem-vindo ao nosso portal de serviços. Aqui você encontra informações sobre seus benefícios, extrato de conta e dados cadastrais. Clique em "Entrar" para acessar sua conta pessoal.
+        </div>
+      </div>
+      <p class="meta-note">Impacto: pessoas com baixa visão ou daltonismo não conseguem ler o conteúdo.</p>
+    </div>
+
+    <!-- VIOLAÇÃO 2 -->
+    <div class="card">
+      <div class="card-header">
+        <span class="violation-number" style="color:#AFA9EC;">2</span>
+        <div>
+          <h2>Alvos de toque minúsculos e sem foco visível <span class="badge badge-o">O — Operável</span></h2>
+          <p class="desc">Viola <strong>2.5.8 (Tamanho do alvo — AA, WCAG 2.2)</strong> e <strong>2.4.7 (Foco visível)</strong>. Os botões têm menos de 24×24px e não exibem nenhum indicador visual ao receber foco via teclado.</p>
+        </div>
+      </div>
+      <div class="demo-box">
+        <p class="demo-label">⚠ Tente navegar por esses botões usando apenas Tab</p>
+        <div>
+          <button class="bad-btn">Início</button>
+          <button class="bad-btn">Sobre</button>
+          <button class="bad-btn">Produtos</button>
+          <button class="bad-btn">Serviços</button>
+          <button class="bad-btn">Contato</button>
+          <button class="bad-btn">FAQ</button>
+          <button class="bad-btn">Blog</button>
+          <button class="bad-btn">Login</button>
+        </div>
+      </div>
+      <p class="meta-note">Impacto: usuários de teclado, switch access ou com mobilidade reduzida perdem o foco e não conseguem operar a navegação.</p>
+    </div>
+
+    <!-- VIOLAÇÃO 3 -->
+    <div class="card">
+      <div class="card-header">
+        <span class="violation-number" style="color:#5DCAA5;">3</span>
+        <div>
+          <h2>Conteúdo em movimento sem controle de pausa <span class="badge badge-o">O — Operável</span></h2>
+          <p class="desc">Viola <strong>2.2.2 (Pausar, Parar, Ocultar)</strong>. O conteúdo abaixo pisca em frequência superior a 3 Hz (viola também <strong>2.3.1 — Três flashes</strong>) e gira indefinidamente, sem nenhum mecanismo de pausa.</p>
+        </div>
+      </div>
+      <div class="demo-box">
+        <p class="demo-label">⚠ Conteúdo animado sem controle — piscar pode causar desconforto</p>
+        <div style="display:flex; align-items:center; gap:32px; flex-wrap:wrap; padding: 8px 0;">
+          <span class="spinning">🔄 Menu rotativo</span>
+          <span class="blinking">CLIQUE AQUI AGORA!</span>
+        </div>
+      </div>
+      <p class="meta-note">Impacto: pode desencadear convulsões em pessoas com epilepsia fotossensível; causa sobrecarga cognitiva em pessoas com TDAH.</p>
+    </div>
+
+    <!-- VIOLAÇÃO 4 -->
+    <div class="card">
+      <div class="card-header">
+        <span class="violation-number" style="color:#85B7EB;">4</span>
+        <div>
+          <h2>Imagem sem texto alternativo <span class="badge badge-p">P — Perceptível</span></h2>
+          <p class="desc">Viola <strong>1.1.1 (Conteúdo não-textual)</strong>. A imagem abaixo carrega informação visual sem nenhum atributo <code>alt</code> — leitores de tela simplesmente a ignoram.</p>
+        </div>
+      </div>
+      <div class="demo-box">
+        <p class="demo-label">⚠ Imagem informativa sem alt (leitor de tela ignora completamente)</p>
+        <!-- VIOLAÇÃO INTENCIONAL: img sem alt -->
+        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='90' viewBox='0 0 400 90'%3E%3Crect width='400' height='90' fill='%23f5a623'/%3E%3Ctext x='200' y='52' text-anchor='middle' font-size='36' fill='white'%3E📊%3C/text%3E%3C/svg%3E" style="width:100%; border-radius:6px; display:block;" />
+        <code class="code-snippet">&lt;img src="grafico-vendas.png"&gt; &lt;!-- sem atributo alt! --&gt;</code>
+      </div>
+      <p class="meta-note">Impacto: usuários de leitores de tela (NVDA, JAWS, VoiceOver) não recebem nenhuma informação sobre o conteúdo da imagem.</p>
+    </div>
+
+    <!-- VIOLAÇÃO 5 -->
+    <div class="card">
+      <div class="card-header">
+        <span class="violation-number" style="color:#97C459;">5</span>
+        <div>
+          <h2>Formulário sem labels — apenas placeholder <span class="badge badge-u">U — Compreensível</span></h2>
+          <p class="desc">Viola <strong>1.3.1 (Informação e relacionamentos)</strong> e <strong>3.3.2 (Rótulos ou instruções)</strong>. O <code>placeholder</code> desaparece quando o usuário começa a digitar, eliminando o contexto do campo.</p>
+        </div>
+      </div>
+      <div class="demo-box">
+        <p class="demo-label">⚠ Comece a digitar em qualquer campo — você perde o contexto</p>
+        <!-- VIOLAÇÃO INTENCIONAL: inputs sem <label> -->
+        <input class="bad-input" type="text" placeholder="Nome completo" />
+        <input class="bad-input" type="text" placeholder="CPF" />
+        <input class="bad-input" type="text" placeholder="Data de nascimento" />
+        <button class="bad-btn" style="font-size:12px; padding:6px 14px;">Enviar</button>
+      </div>
+      <p class="meta-note">Impacto: usuários com dislexia, memória de trabalho reduzida ou que usam preenchimento automático perdem o contexto do campo ao digitar.</p>
+    </div>
+
+    <!-- VIOLAÇÃO 6 -->
+    <div class="card">
+      <div class="card-header">
+        <span class="violation-number" style="color:#EF9F27;">6</span>
+        <div>
+          <h2>Armadilha de teclado (keyboard trap) <span class="badge badge-o">O — Operável</span></h2>
+          <p class="desc">Viola <strong>2.1.2 (Sem armadilha de teclado)</strong>. O componente abaixo captura o foco e não permite sair usando Tab ou Escape, prendendo quem navega apenas por teclado.</p>
+        </div>
+      </div>
+      <div class="demo-box">
+        <p class="demo-label">⚠ Pressione Tab até entrar nesta área — você não conseguirá sair</p>
+        <div class="trap-area">
+          <p>Área de chat ao vivo</p>
+          <!-- VIOLAÇÃO INTENCIONAL: keyboard trap via JS -->
+          <textarea id="trap-textarea" class="trap-textarea" rows="2" placeholder="Digite sua mensagem..."></textarea>
+        </div>
+      </div>
+      <p class="meta-note">Impacto: usuários que dependem de teclado ficam presos no componente, sem conseguir navegar para o restante da página.</p>
+    </div>
+
+    <hr class="divider" />
+
+    <p class="footer">
+      Todas as violações são intencionais para fins didáticos — WCAG 2.2 POUR.<br>
+      Nenhum desses padrões deve ser replicado em produção.
+    </p>
+
+  </div>
+
+  <script>
+    const trap = document.getElementById('trap-textarea');
+    if (trap) {
+      trap.addEventListener('keydown', function(e) {
+        if (e.key === 'Tab' || e.key === 'Escape') {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+      });
+    }
+  </script>
+</body>
+</html>
